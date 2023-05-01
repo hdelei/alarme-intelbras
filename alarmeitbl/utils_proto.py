@@ -28,7 +28,7 @@ class UtilsProtocolo:
                 pass
             elif digito >= 0x01 and digito <= 0x09:
                 numero += posicao * digito
-            else:
+            else:                
                 Log.warn("valor contact id invalido", self.hexprint(dados))
                 return -1
             posicao *= 10
@@ -55,13 +55,13 @@ class UtilsProtocolo:
     def from_bcd(self, dados):
         n = 0
         dados_rev = dados[:]
-        dados_rev.reverse()
+        dados_rev.reverse()        
         numero = 0
         posicao = 1
-        for nibbles in dados_rev:
+        for nibbles in dados_rev:            
             numero += (nibbles >> 4) * 10 * posicao
             numero += (nibbles & 0x04) * posicao
-            posicao *= 100
+            posicao *= 100        
         return numero
     
     # Codifica um número de 16 bits em 2 octetos
@@ -71,3 +71,6 @@ class UtilsProtocolo:
     # Decodifica um buffer de 2 octetos para inteiro de 16 bits
     def parse_be16(self, buf):
         return buf[0] * 256 + buf[1]
+
+    def conta_from_buff(self, dados):        
+        return (str(hex(dados[0])[2:4]) + str(hex(dados[1])[2:4])).zfill(4)

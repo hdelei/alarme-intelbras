@@ -215,15 +215,15 @@ class Tratador(TCPServerHandler, UtilsProtocolo):
             return True
         return False
 
-    def consome_frame_longo(self):
+    def consome_frame_longo(self):        
         if len(self.recv_buf) < 2:
             return False
-
-        esperado = self.recv_buf[0] + 2 # comprimento + dados + checksum
+        
+        esperado = self.recv_buf[0] + 2 # comprimento + dados + checksum 
         if len(self.recv_buf) < esperado:
             return False
 
-        rawmsg = self.recv_buf[:esperado]
+        rawmsg = self.recv_buf[:esperado]        
         self.recv_buf = self.recv_buf[esperado:]
 
         # checksum de pacote sufixado com checksum resulta em 0
@@ -240,7 +240,7 @@ class Tratador(TCPServerHandler, UtilsProtocolo):
             return True
 
         tipo = msg[0]
-        msg = msg[1:]
+        msg = msg[1:]        
 
         if tipo == 0x80:
             self.solicita_data_hora(msg)
@@ -266,11 +266,12 @@ class Tratador(TCPServerHandler, UtilsProtocolo):
             self.log_warn("identificacao central: tamanho inesperado,", self.hexprint(msg))
             self.envia_curto(resposta)
 
-        canal = msg[0] # 'E' (0x45)=Ethernet, 'G'=GPRS, 'H'=GPRS2
-        conta = self.from_bcd(msg[1:3])
+        canal = msg[0] # 'E' (0x45)=Ethernet, 'G'=GPRS, 'H'=GPRS2        
+        conta = self.conta_from_buff(msg[1:3])
+        #conta = self.from_bcd(msg[1:3])
         macaddr = msg[3:6]
         macaddr_s = (":".join(["%02x" % i for i in macaddr])).lower()
-        self.log_info("identificacao central conta %d mac %s" % (conta, macaddr_s))
+        self.log_info("identificacao central conta %s mac %s" % (conta, macaddr_s))
 
         if not Tratador.valida_central(macaddr_s):
             self.log_info("central nao autorizada")
@@ -325,7 +326,7 @@ class Tratador(TCPServerHandler, UtilsProtocolo):
         contact_id = self.contact_id_decode(msg[1:5])
         tipo_msg = self.contact_id_decode(msg[5:7]) # 18 decimal = Contact ID
         qualificador = msg[7]
-        codigo = self.contact_id_decode(msg[8:11])
+        codigo = self.contact_id_decode(msg[8:11])        
         particao = self.contact_id_decode(msg[11:13])
         zona = self.contact_id_decode(msg[13:16])
         if com_foto:
