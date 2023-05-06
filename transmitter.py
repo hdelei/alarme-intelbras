@@ -28,6 +28,8 @@ client_data = {
     'zone':'001'
     }
 
+#teste
+
 util = UtilsTX()
 
 data_list = util.create_array(client_data)
